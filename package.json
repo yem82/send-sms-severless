@@ -1,0 +1,20 @@
+{
+  "name": "send-sms-serveless",
+  "version": "1.0.0",
+  "description": "A service to send SMS using AWS with Severless Framework",
+  "main": "",
+  "scripts": {
+    "compile": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc -p tsconfig.build.json"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.4.0",
+    "@types/node": "^13.13.5",
+    "jest": "^29.4.2",
+    "ts-jest": "^29.0.5",
+    "typescript": "^4.3.0"
+  },
+  "author": "",
+  "license": "ISC"
+}
