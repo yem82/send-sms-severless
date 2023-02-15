@@ -4,3 +4,11 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs16.x
+
+functions:
+  publishMessageDetailsToSns:
+    handler: src/publishMessageDetailsToSnsHandler.handler
+    events:
+      - http:
+          path: /publish-message-details
+          method: post
