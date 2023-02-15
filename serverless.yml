@@ -12,3 +12,10 @@ functions:
       - http:
           path: /publish-message-details
           method: post
+
+resources:
+  Resources:
+    SNSTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: PublishedMessagesSNSTopic
