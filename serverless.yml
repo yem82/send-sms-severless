@@ -12,6 +12,8 @@ provider:
 
   environment:
     PUBLISHED_MESSAGE_DETAILS_SNS_ARN: ${ssm:published-message-details-sns-arn}
+    PUBLISHED_MESSAGE_DETAILS_SQS_ARN: ${ssm:published-message-details-sqs-arn}
+    PUBLISHED_MESSAGE_DETAILS_SQS_URL: ${ssm:published-message-details-sqs-url}
 
 functions:
   publishMessageDetailsToSns:
@@ -32,3 +34,30 @@ resources:
       Type: AWS::SQS::Queue
       Properties:
         QueueName: PublishedMessageDetailsSQSQueue
+
+    SNSTopicQueuePolicy:
+      Type: AWS::SQS::QueuePolicy
+      Properties:
+        Queues:
+          - ${self:provider.environment.PUBLISHED_MESSAGE_DETAILS_SQS_URL}
+        PolicyDocument:
+          Statement:
+            - Sid: "allow-sns-messages"
+              Effect: Allow
+              Resource: ${self:provider.environment.PUBLISHED_MESSAGE_DETAILS_SQS_ARN}
+              Action:
+                - "SQS:SendMessage"
+              Principal:
+                Service:
+                  - sns.amazonaws.com
+              Condition:
+                ArnEquals:
+                  "aws:SourceArn": ${self:provider.environment.PUBLISHED_MESSAGE_DETAILS_SNS_ARN}
+
+    SQSQueueSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        TopicArn: ${self:provider.environment.PUBLISHED_MESSAGE_DETAILS_SNS_ARN}
+        Endpoint: ${self:provider.environment.PUBLISHED_MESSAGE_DETAILS_SQS_ARN}
+        Protocol: sqs
+        RawMessageDelivery: true
