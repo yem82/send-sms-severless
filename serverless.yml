@@ -18,4 +18,4 @@ resources:
     SNSTopic:
       Type: AWS::SNS::Topic
       Properties:
-        TopicName: PublishedMessagesSNSTopic
+        TopicName: PublishedMessageDetailsSNSTopic
