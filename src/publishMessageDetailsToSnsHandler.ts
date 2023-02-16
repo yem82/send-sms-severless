@@ -46,11 +46,7 @@ const validateRequestPayload = (event: any) => {
     throw new BadRequestError("event body is empty");
   }
 
-  if (!body.phoneNumber || typeof body.phoneNumber !== 'string') {
-    throw new BadRequestError("phoneNumber as string is missing from event body");
-  }
-
-  if (!body.message || typeof body.message !== 'string') {
-    throw new BadRequestError("message as string is missing from event body");
+  if (!body.phoneNumber || !body.message) {
+    throw new BadRequestError("phoneNumber or message is missing from event body");
   }
 };
