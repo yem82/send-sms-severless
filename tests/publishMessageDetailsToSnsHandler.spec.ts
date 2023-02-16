@@ -1,9 +1,9 @@
-import { handler } from "../src/publishMessageDetailsToSnsHandler";
+import { handler, HandlerEvent } from "../src/publishMessageDetailsToSnsHandler";
 
 describe("publishMessageDetailsToSnsHandler", () => {
   describe("Happy path", () => {
     it("should return a 200 response", async() => {
-      const event = {} as any
+      const event: HandlerEvent = {body: ""}
 
       expect(await handler(event)).toEqual({
           statusCode: 200,

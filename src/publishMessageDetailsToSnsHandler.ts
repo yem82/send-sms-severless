@@ -1,6 +1,7 @@
 import { APIGatewayEvent } from "aws-lambda";
 
-export const handler = async (event: APIGatewayEvent) => {
+export type HandlerEvent = Pick<APIGatewayEvent, "body">;
+export const handler = async (_event: HandlerEvent) => {
     return {
       statusCode: 200,
       body: JSON.stringify({
