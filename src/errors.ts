@@ -1,6 +1,5 @@
 class BadRequestError extends Error {
   statusCode: number;
-  isCustomError = true;
 
   constructor(message: string) {
     super(message);

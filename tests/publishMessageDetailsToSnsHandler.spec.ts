@@ -49,9 +49,11 @@ describe("publishMessageDetailsToSnsHandler", () => {
 
     describe("when there is no phone number or message in body", () => {
       it.each`
-        phoneNumber      | message
-        ${"07345375423"} | ${undefined}
-        ${undefined}     | ${"Some message"}
+        phoneNumber        | message
+        ${"+447345375423"} | ${undefined}
+        ${undefined}       | ${"Some message"}
+        ${" "}             | ${"Some message"}
+        ${"+447345375423"} | ${" "}
       `(
         "should return a 400 BadRequestError when phone number is $phoneNumber and message is $message",
         async ({ phoneNumber, message }) => {
