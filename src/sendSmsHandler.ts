@@ -6,13 +6,13 @@ const logger = new Logger({ serviceName: 'sendSms' });
 const sns = new AWS.SNS();
 
 export const handler = async (event: SQSEvent) => {
-
   const setSMSAttributesParams = {
     attributes: {
       DefaultSMSType: "Promotional"
      }
   }
 
+  console.log(setSMSAttributesParams)
   await sns.setSMSAttributes(setSMSAttributesParams).promise()
   logger.info("set SMS attributes in SNS")
 
@@ -21,6 +21,7 @@ export const handler = async (event: SQSEvent) => {
     TopicArn: process.env.SEND_SMS_SNS_ARN
   };
 
+  console.log(publishParams)
   await sns.publish(publishParams).promise()
   logger.info("message published to SNS")
 
