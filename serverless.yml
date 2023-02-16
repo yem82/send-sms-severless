@@ -12,6 +12,7 @@ provider:
 
   environment:
     PUBLISHED_MESSAGE_DETAILS_SNS_ARN: ${ssm:published-message-details-sns-arn}
+    SEND_SMS_SNS_ARN: ${ssm:send-sms-sns-arn}
     PUBLISHED_MESSAGE_DETAILS_SQS_ARN: ${ssm:published-message-details-sqs-arn}
     PUBLISHED_MESSAGE_DETAILS_SQS_URL: ${ssm:published-message-details-sqs-url}
 
@@ -22,6 +23,11 @@ functions:
       - http:
           path: /publish-message-details
           method: post
+
+  sendSms:
+    handler: src/sendSmsHandler.handler
+    events:
+      - sqs: ${self:provider.environment.PUBLISHED_MESSAGE_DETAILS_SQS_ARN}
 
 resources:
   Resources:
