@@ -30,6 +30,11 @@ resources:
       Properties:
         TopicName: PublishedMessageDetailsSNSTopic
 
+    SNSTopicSendSms:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: SendSmsSNSTopic
+
     SQSQueue:
       Type: AWS::SQS::Queue
       Properties:
