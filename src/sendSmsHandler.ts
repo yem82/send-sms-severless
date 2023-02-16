@@ -12,7 +12,6 @@ export const handler = async (event: SQSEvent) => {
      }
   }
 
-  console.log(setSMSAttributesParams)
   await sns.setSMSAttributes(setSMSAttributesParams).promise()
   logger.info("set SMS attributes in SNS")
 
@@ -21,7 +20,6 @@ export const handler = async (event: SQSEvent) => {
     TopicArn: process.env.SEND_SMS_SNS_ARN
   };
 
-  console.log(publishParams)
   await sns.publish(publishParams).promise()
   logger.info("message published to SNS")
 
