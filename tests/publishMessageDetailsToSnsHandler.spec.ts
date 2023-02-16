@@ -35,4 +35,43 @@ describe("publishMessageDetailsToSnsHandler", () => {
       expect(sns.publish).toHaveBeenCalledWith(expectedParams);
     });
   });
+
+  describe("Unhappy path", () => {
+    describe("when there is no body", () => {
+      it("should return a 400 BadRequestError", async () => {
+        const event = {
+          body: null
+        };
+
+        expect(await handler(event)).toEqual({ statusCode: 400, body: "event body is empty" });
+      });
+    });
+
+    describe("when there is no phone number as a string in body", () => {
+      it.each([7345375423, null])("should return a 400 BadRequestError", async (phoneNumber) => {
+        const event = {
+          body: JSON.stringify({
+            phoneNumber,
+            message: "Some message"
+
+          })
+        };
+
+        expect(await handler(event)).toEqual({ statusCode: 400, body: "phoneNumber as string is missing from event body" });
+      });
+    });
+
+    describe("when there is no message as a string in body", () => {
+      it.each([7345375423, null])("should return a 400 BadRequestError", async (message) => {
+        const event = {
+          body: JSON.stringify({
+            phoneNumber: "07345375423",
+            message
+          })
+        };
+
+        expect(await handler(event)).toEqual({ statusCode: 400, body: "message as string is missing from event body" });
+      });
+    });
+  });
 });
