@@ -27,3 +27,8 @@ resources:
       Type: AWS::SNS::Topic
       Properties:
         TopicName: PublishedMessageDetailsSNSTopic
+
+    SQSQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: PublishedMessageDetailsSQSQueue
