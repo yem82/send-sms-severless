@@ -4,6 +4,14 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs16.x
+  iamRoleStatements:
+    - Effect: "Allow"
+      Resource: "*"
+      Action:
+        - "sns:*"
+
+  environment:
+    PUBLISHED_MESSAGE_DETAILS_SNS_ARN: ${ssm:published-message-details-sns-arn}
 
 functions:
   publishMessageDetailsToSns:
