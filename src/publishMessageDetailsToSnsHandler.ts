@@ -53,12 +53,12 @@ const validateRequestPayload = (event: HandlerEvent) => {
     throw new BadRequestError("event body is empty");
   }
 
-  if (!data.phoneNumber || !data.message || hasWhiteSpaceAsFieldValue(data) ) {
+  if (!data.phoneNumber || !data.message || hasWhiteSpaceAsValue(data) ) {
     throw new BadRequestError("phoneNumber or message is missing from event body");
   }
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const hasWhiteSpaceAsFieldValue = (data: any) => {
+const hasWhiteSpaceAsValue = (data: any) => {
   return /^\s+$/.test(data.phoneNumber) || /^\s+$/.test(data.message)
 }
