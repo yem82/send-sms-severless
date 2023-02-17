@@ -12,23 +12,24 @@ export const handler = async (event: SQSEvent) => {
      }
   }
 
-  await sns.setSMSAttributes(setSMSAttributesParams).promise()
-  logger.info("set SMS attributes in SNS")
+  for (const record of event.Records) {
+    await sns.setSMSAttributes(setSMSAttributesParams).promise()
+    logger.info("set SMS attributes in SNS")
 
-  const publishParams = {
-    Message: event.Records[0].body,
-    TopicArn: process.env.SEND_SMS_SNS_ARN
-  };
+    const publishParams = {
+      Message: record.body,
+      TopicArn: process.env.SEND_SMS_SNS_ARN
+    };
 
-  await sns.publish(publishParams).promise()
-  logger.info("message published to SNS")
+    await sns.publish(publishParams).promise()
+    logger.info("message published to SNS")
+  }
 
   return {
     statusCode: 200,
     body: JSON.stringify(
       {
         message: "lambda executed successfully",
-        input: event,
       }
     ),
   };

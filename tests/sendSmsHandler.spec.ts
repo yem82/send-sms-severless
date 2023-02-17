@@ -1,4 +1,5 @@
 import AWS from "aws-sdk";
+import { SQSEvent } from "aws-lambda";
 import { handler } from "../src/sendSmsHandler";
 
 jest.mock('aws-sdk', () => {
@@ -11,63 +12,62 @@ jest.mock('aws-sdk', () => {
   return { SNS: jest.fn(() => mockedSNS) };
 });
 
+const event = {
+  Records: [
+    {
+      body: JSON.stringify({
+        phoneNumber: "07865346733",
+        message: "Some message 1",
+      }),
+    },
+    {
+      body: JSON.stringify({
+        phoneNumber: "07865346734",
+        message: "Some message 2",
+      }),
+    }
+  ],
+} as SQSEvent;
+
 describe("sendSmsHandler", () => {
-  describe("Happy path", () => {
-    it("should set SMS attributes in SNS", async () => {
-      const sns = new AWS.SNS();
+  process.env.SEND_SMS_SNS_ARN = "test-arn";
 
-      (sns.setSMSAttributes().promise as jest.Mock).mockResolvedValueOnce({});
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-      const event = {
-        Records: [
-          {
-            body: JSON.stringify({
-              phoneNumber: "07865346733",
-              message: "Some message",
-            }),
-          },
-        ],
-      };
+  it("should set SMS attributes in SNS", async () => {
+    const sns = new AWS.SNS();
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await handler(event as any);
+    await handler(event);
 
-      const expectedAttributeParams = {
-       attributes: {
+    const expectedAttributeParams = {
+      attributes: {
         DefaultSMSType: "Promotional"
-       }
-      };
+      }
+    };
 
-      expect(sns.setSMSAttributes).toHaveBeenCalledWith(expectedAttributeParams);
-    });
+    expect(sns.setSMSAttributes).toHaveBeenCalledTimes(2);
+    expect(sns.setSMSAttributes).toHaveBeenCalledWith(expectedAttributeParams);
+  });
 
-    it("should publish message to SNS", async () => {
-      const sns = new AWS.SNS();
+  it("should publish message to SNS", async () => {
+    const sns = new AWS.SNS();
 
-      (sns.publish().promise as jest.Mock).mockResolvedValueOnce({
-        MessageId: 'some-message-id',
-      });
+    await handler(event);
 
-      const event = {
-        Records: [
-          {
-            body: JSON.stringify({
-              phoneNumber: "07865346733",
-              message: "Some message",
-            }),
-          },
-        ],
-      };
+    const expectedPublishParams1 = {
+      Message: event.Records[0].body,
+      TopicArn: process.env.SEND_SMS_SNS_ARN,
+    };
 
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      await handler(event as any);
+    const expectedPublishParams2 = {
+      Message: event.Records[1].body,
+      TopicArn: process.env.SEND_SMS_SNS_ARN,
+    };
 
-      const expectedPublishParams = {
-        Message: event.Records[0].body,
-        TopicArn: process.env.SEND_SMS_SNS_ARN,
-      };
-
-      expect(sns.publish).toHaveBeenCalledWith(expectedPublishParams);
-    });
+    expect(sns.publish).toHaveBeenCalledTimes(2);
+    expect(sns.publish).toHaveBeenCalledWith(expectedPublishParams1);
+    expect(sns.publish).toHaveBeenCalledWith(expectedPublishParams2);
   });
 });
