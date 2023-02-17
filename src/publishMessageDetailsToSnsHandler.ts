@@ -40,20 +40,25 @@ export const handler = async (event: HandlerEvent) => {
   }
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const validateRequestPayload = (event: any) => {
-  const body = JSON.parse(event.body);
+const validateRequestPayload = (event: HandlerEvent) => {
+  let data;
 
-  if (!body || Object.keys(body).length === 0) {
+  if (event.body) {
+    data = JSON.parse(event.body);
+  } else {
     throw new BadRequestError("event body is empty");
   }
 
-  if (!body.phoneNumber || !body.message || hasWhiteSpaceAsFieldValue(body) ) {
+  if (Object.keys(data).length === 0) {
+    throw new BadRequestError("event body is empty");
+  }
+
+  if (!data.phoneNumber || !data.message || hasWhiteSpaceAsFieldValue(data) ) {
     throw new BadRequestError("phoneNumber or message is missing from event body");
   }
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const hasWhiteSpaceAsFieldValue = (body: any) => {
-  return /^\s+$/.test(body.phoneNumber) || /^\s+$/.test(body.message)
+const hasWhiteSpaceAsFieldValue = (data: any) => {
+  return /^\s+$/.test(data.phoneNumber) || /^\s+$/.test(data.message)
 }
