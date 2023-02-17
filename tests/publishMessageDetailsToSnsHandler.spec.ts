@@ -11,7 +11,7 @@ jest.mock('aws-sdk', () => {
 });
 
 describe("publishMessageDetailsToSnsHandler", () => {
-  process.env.PUBLISHED_MESSAGE_DETAILS_SNS_ARN = "test-arn"
+  process.env.PUBLISHED_MESSAGE_DETAILS_SNS_ARN = "test-arn";
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -48,10 +48,10 @@ describe("publishMessageDetailsToSnsHandler", () => {
       };
 
       expect(await handler(event)).toEqual({
-          statusCode: 200,
-          body: JSON.stringify({
-            message: "Lambda executed successfully!",
-          }),
+        statusCode: 200,
+        body: JSON.stringify({
+          message: "Lambda executed successfully!",
+        }),
       });
     });
   });

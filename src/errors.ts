@@ -8,4 +8,4 @@ class BadRequestError extends Error {
   }
 }
 
-export { BadRequestError  }
+export { BadRequestError };

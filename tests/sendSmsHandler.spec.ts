@@ -73,10 +73,10 @@ describe("sendSmsHandler", () => {
 
   it("should return a 200 success response", async () => {
     expect(await handler(event)).toEqual({
-        statusCode: 200,
-        body: JSON.stringify({
-          message: "Lambda executed successfully!",
-        }),
+      statusCode: 200,
+      body: JSON.stringify({
+        message: "Lambda executed successfully!",
+      }),
     });
   });
 });

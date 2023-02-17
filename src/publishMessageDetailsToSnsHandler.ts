@@ -10,8 +10,8 @@ const sns = new AWS.SNS();
 type HandlerEvent = Pick<APIGatewayEvent, "body">;
 
 interface HandlerResponse {
-  statusCode: number,
-  body: string
+  statusCode: number;
+  body: string;
 }
 
 export const handler = async (event: HandlerEvent): Promise<HandlerResponse> => {
@@ -32,7 +32,7 @@ export const handler = async (event: HandlerEvent): Promise<HandlerResponse> => 
         message: "Lambda executed successfully!",
       }),
     };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     if (err.name === "BAD_REQUEST_ERROR") {
       return {
@@ -58,16 +58,16 @@ const validateRequestPayload = (event: HandlerEvent) => {
     throw new BadRequestError("event body is empty");
   }
 
-  if (!data.phoneNumber || !data.message || hasWhiteSpaceAsValue(data) ) {
+  if (!data.phoneNumber || !data.message || hasWhiteSpaceAsValue(data)) {
     throw new BadRequestError("phoneNumber or message is missing from event body");
   }
 };
 
 interface ParsedEventBody {
   phoneNumber: string;
-  message: string
+  message: string;
 }
 
 const hasWhiteSpaceAsValue = (data: ParsedEventBody) => {
-  return /^\s+$/.test(data.phoneNumber) || /^\s+$/.test(data.message)
-}
+  return /^\s+$/.test(data.phoneNumber) || /^\s+$/.test(data.message);
+};
