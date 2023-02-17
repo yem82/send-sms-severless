@@ -1,92 +1,61 @@
-<!--
-title: 'AWS Simple HTTP Endpoint example in NodeJS'
-description: 'This template demonstrates how to make a simple HTTP API with Node.js running on AWS Lambda and API Gateway using the Serverless Framework.'
-layout: Doc
-framework: v3
-platform: AWS
-language: nodeJS
-authorLink: 'https://github.com/serverless'
-authorName: 'Serverless, inc.'
-authorAvatar: 'https://avatars1.githubusercontent.com/u/13742415?s=200&v=4'
--->
+# Send SMS using AWS with Serverless Framework
 
-# Serverless Framework Node HTTP API on AWS
+This service sends SMS to a phone number provided by a client request. The app is built with AWS Lambda and API Gateway using the Serverless Framework. The flow is documented [here](https://miro.com/app/board/uXjVPmSByMM=/).
 
-This template demonstrates how to make a simple HTTP API with Node.js running on AWS Lambda and API Gateway using the Serverless Framework.
+## Contents
 
-This template does not include any kind of persistence (database). For more advanced examples, check out the [serverless/examples repository](https://github.com/serverless/examples/) which includes Typescript, Mongo, DynamoDB and other examples.
+- [Github Actions](#github-actions)
+- [Progress](#progress)
 
-## Usage
+## Github Actions
+
+Github Actions is used to build and deploy the app to AWS.
+
+Following commands are used in the pipeline:
+
+### Install Dependacies
+
+```
+npm ci
+```
+
+### Linting
+
+```
+npm run lint
+```
+
+### Tests
+
+```
+npm run test
+```
 
 ### Deployment
 
 ```
-$ serverless deploy
+npm run build
 ```
 
-After deploying, you should see output similar to:
+The app is deployed to the `eu-west-2` region on IAM user AWS account.
 
-```bash
-Deploying aws-node-http-api-project to stage dev (us-east-1)
+## Progress
 
-✔ Service deployed to stack aws-node-http-api-project-dev (152s)
+### Done
 
-endpoint: GET - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/
-functions:
-  hello: aws-node-http-api-project-dev-hello (1.9 kB)
-```
+- create IAM user account with MFA
+- create lambda to receive request including phone number and message
+- deploy to `eu-west-2` region using Github Actions
+- send request payload to SNS Topic
+- subscribe SQS Queue to SNS Topic
+- create lambda to listen to SQS Queue event
+- send message to SNS Topic
+- validated phone number in AWS sandbox for SNS
 
-_Note_: In current form, after deployment, your API is public and can be invoked by anyone. For production deployments, you might want to configure an authorizer. For details on how to do that, refer to [http event docs](https://www.serverless.com/framework/docs/providers/aws/events/apigateway/).
+### Todo
 
-### Invocation
-
-After successful deployment, you can call the created application via HTTP:
-
-```bash
-curl https://xxxxxxx.execute-api.us-east-1.amazonaws.com/
-```
-
-Which should result in response similar to the following (removed `input` content for brevity):
-
-```json
-{
-  "message": "Go Serverless v2.0! Your function executed successfully!",
-  "input": {
-    ...
-  }
-}
-```
-
-### Local development
-
-You can invoke your function locally by using the following command:
-
-```bash
-serverless invoke local --function hello
-```
-
-Which should result in response similar to the following:
-
-```
-{
-  "statusCode": 200,
-  "body": "{\n  \"message\": \"Go Serverless v3.0! Your function executed successfully!\",\n  \"input\": \"\"\n}"
-}
-```
-
-
-Alternatively, it is also possible to emulate API Gateway and Lambda locally by using `serverless-offline` plugin. In order to do that, execute the following command:
-
-```bash
-serverless plugin install -n serverless-offline
-```
-
-It will add the `serverless-offline` plugin to `devDependencies` in `package.json` file as well as will add it to `plugins` in `serverless.yml`.
-
-After installation, you can start local emulation with:
-
-```
-serverless offline
-```
-
-To learn more about the capabilities of `serverless-offline`, please refer to its [GitHub repository](https://github.com/dherault/serverless-offline).
+- use webapack
+- invoke lambdas locally using serverless offline
+- use middleware
+- see why SMS is not being sent via SNS Topic
+- refactor using an architectural pattern (e.g hexagonal architecture)

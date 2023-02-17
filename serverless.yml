@@ -4,6 +4,7 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs16.x
+  region: eu-west-2
   iamRoleStatements:
     - Effect: "Allow"
       Resource: "*"
