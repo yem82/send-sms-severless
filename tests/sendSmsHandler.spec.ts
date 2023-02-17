@@ -16,13 +16,13 @@ const event = {
   Records: [
     {
       body: JSON.stringify({
-        phoneNumber: "07865346733",
+        phoneNumber: "+447865346733",
         message: "Some message 1",
       }),
     },
     {
       body: JSON.stringify({
-        phoneNumber: "07865346734",
+        phoneNumber: "+447865346734",
         message: "Some message 2",
       }),
     }
