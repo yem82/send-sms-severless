@@ -11,16 +11,19 @@ jest.mock('aws-sdk', () => {
 });
 
 describe("publishMessageDetailsToSnsHandler", () => {
+  process.env.PUBLISHED_MESSAGE_DETAILS_SNS_ARN = "test-arn"
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   describe("Happy path", () => {
     it("should publish correct params to SNS", async () => {
       const sns = new AWS.SNS();
-      (sns.publish().promise as jest.Mock).mockResolvedValueOnce({
-        MessageId: 'some-message-id',
-      });
 
       const event = {
         body: JSON.stringify({
-          phoneNumber: "07865346733",
+          phoneNumber: "+447865346733",
           message: "Hello world"
         }),
       };
@@ -32,6 +35,7 @@ describe("publishMessageDetailsToSnsHandler", () => {
         TopicArn: process.env.PUBLISHED_MESSAGE_DETAILS_SNS_ARN
       };
 
+      expect(sns.publish).toHaveBeenCalledTimes(1);
       expect(sns.publish).toHaveBeenCalledWith(expectedParams);
     });
   });
@@ -51,9 +55,9 @@ describe("publishMessageDetailsToSnsHandler", () => {
       it.each`
         phoneNumber        | message
         ${"+447345375423"} | ${undefined}
+        ${"+447345375423"} | ${" "}
         ${undefined}       | ${"Some message"}
         ${" "}             | ${"Some message"}
-        ${"+447345375423"} | ${" "}
       `(
         "should return a 400 BadRequestError when phone number is $phoneNumber and message is $message",
         async ({ phoneNumber, message }) => {
