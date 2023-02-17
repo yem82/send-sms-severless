@@ -9,7 +9,12 @@ const sns = new AWS.SNS();
 
 export type HandlerEvent = Pick<APIGatewayEvent, "body">;
 
-export const handler = async (event: HandlerEvent) => {
+interface HandlerResponse {
+  statusCode: number,
+  body: string
+}
+
+export const handler = async (event: HandlerEvent): Promise<HandlerResponse> => {
   try {
     validateRequestPayload(event);
 
@@ -58,7 +63,11 @@ const validateRequestPayload = (event: HandlerEvent) => {
   }
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const hasWhiteSpaceAsValue = (data: any) => {
+interface ParsedEventBody {
+  phoneNumber: string;
+  message: string
+}
+
+const hasWhiteSpaceAsValue = (data: ParsedEventBody) => {
   return /^\s+$/.test(data.phoneNumber) || /^\s+$/.test(data.message)
 }

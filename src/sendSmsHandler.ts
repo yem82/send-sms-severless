@@ -5,7 +5,12 @@ import { Logger } from '@aws-lambda-powertools/logger';
 const logger = new Logger({ serviceName: 'sendSms' });
 const sns = new AWS.SNS();
 
-export const handler = async (event: SQSEvent) => {
+interface HandlerResponse {
+  statusCode: number,
+  body: string
+}
+
+export const handler = async (event: SQSEvent): Promise<HandlerResponse> => {
   const setSMSAttributesParams = {
     attributes: {
       DefaultSMSType: "Promotional"
