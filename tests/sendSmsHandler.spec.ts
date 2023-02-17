@@ -70,4 +70,13 @@ describe("sendSmsHandler", () => {
     expect(sns.publish).toHaveBeenCalledWith(expectedPublishParams1);
     expect(sns.publish).toHaveBeenCalledWith(expectedPublishParams2);
   });
+
+  it("should return a 200 success response", async () => {
+    expect(await handler(event)).toEqual({
+        statusCode: 200,
+        body: JSON.stringify({
+          message: "Lambda executed successfully!",
+        }),
+    });
+  });
 });

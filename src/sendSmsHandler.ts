@@ -34,7 +34,7 @@ export const handler = async (event: SQSEvent): Promise<HandlerResponse> => {
     statusCode: 200,
     body: JSON.stringify(
       {
-        message: "lambda executed successfully",
+        message: "Lambda executed successfully!",
       }
     ),
   };

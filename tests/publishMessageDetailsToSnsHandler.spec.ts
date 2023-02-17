@@ -38,6 +38,22 @@ describe("publishMessageDetailsToSnsHandler", () => {
       expect(sns.publish).toHaveBeenCalledTimes(1);
       expect(sns.publish).toHaveBeenCalledWith(expectedParams);
     });
+
+    it("should return a 200 success response", async () => {
+      const event = {
+        body: JSON.stringify({
+          phoneNumber: "+447865346733",
+          message: "Hello world"
+        }),
+      };
+
+      expect(await handler(event)).toEqual({
+          statusCode: 200,
+          body: JSON.stringify({
+            message: "Lambda executed successfully!",
+          }),
+      });
+    });
   });
 
   describe("Unhappy path", () => {

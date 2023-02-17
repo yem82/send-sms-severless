@@ -7,7 +7,7 @@ import { BadRequestError } from "./errors";
 const logger = new Logger({ serviceName: 'publishMessageDetailsToSNS' });
 const sns = new AWS.SNS();
 
-export type HandlerEvent = Pick<APIGatewayEvent, "body">;
+type HandlerEvent = Pick<APIGatewayEvent, "body">;
 
 interface HandlerResponse {
   statusCode: number,
